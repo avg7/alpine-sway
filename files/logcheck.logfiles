@@ -1,0 +1,3 @@
+# these files will be checked by logcheck
+# This has been tuned towards a default syslog install
+/var/log/messages
