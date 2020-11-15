@@ -1,0 +1,13 @@
+/usr/bin/sudo /bin/cp -rp /home/* /etc/home
+/usr/bin/sudo /bin/sh /etc/files/log.sh
+/usr/bin/sudo /sbin/poweroff
+/usr/bin/sudo /sbin/lbu commit
+/usr/bin/sudo /bin/sh /etc/files/noroot.sh
+/usr/bin/sudo /bin/rm -rf /etc/apk/cache
+/usr/bin/sudo /etc/init.d/networking restart
+/usr/bin/sudo /bin/date --set YYYY-MM-DD
+/usr/bin/sudo /bin/date --set HH:MM:SS
+/usr/bin/sudo /bin/chmod +s /bin/su
+/usr/bin/sudo /etc/init.d/networking restart
+/usr/bin/sudo /sbin/setup-interfaces
+/usr/bin/sudo /sbin/apk add /media/usb/cache/*.apk
