@@ -1,0 +1,34 @@
+#!/bin/sh
+/sbin/setup-alpine; 
+/usr/sbin/adduser admin; 
+/bin/chmod -R 0700 /home/admin; 
+/bin/mkdir /etc/home; 
+/usr/sbin/adduser inet; 
+/bin/chmod -R 0700 /home/inet; 
+/bin/chmod 600 /etc/home;
+/bin/echo "nameserver 46.182.19.48" > /etc/resolv.conf;
+/bin/echo "nameserver 89.233.43.71" >> /etc/resolv.conf;
+/bin/cat "/media/usb/files/5.6.2 sysctl" >> /etc/sysctl.conf;
+/bin/chmod 0700 /etc/sysctl.conf;
+/bin/mkdir /etc/files;
+/bin/cp /media/usb/files/firewall.sh /etc/files;
+/bin/cp /media/usb/files/noroot.sh /etc/files;
+/bin/cp /media/usb/files/startscript.sh /etc/files;
+/bin/cp /media/usb/files/log.sh /etc/files;
+/bin/cp /media/usb/512checksums.sha /etc/files;
+/bin/chown -R root:root /etc/files/*;
+/bin/chmod -R 0500 /etc/files/*;
+/bin/echo -e "tmpfs /home tmpfs nosuid,nodev,noexec,mode=0755 0 0\ntmpfs /tmp tmpfs nosuid,nodev,noexec 0 0\ntmpfs /var/tmp tmpfs nosuid,nodev,noexec 0 0" >> /etc/fstab;
+/bin/cp /media/usb/files/boot.start /etc/local.d;
+/bin/chmod 0500 /etc/local.d/boot.start;
+/sbin/rc-update add local default;
+/sbin/apk verify /media/usb/sudo/*.apk;
+/sbin/apk add /media/usb/sudo/*.apk;
+/bin/echo -e "Defaults secure_path=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"\nDefaults passwd_tries=1\nDefaults use_pty\nDefaults requiretty\nDefaults env_reset, timestamp_timeout=0\nadmin ALL=(ALL) ALL" | EDITOR="/usr/bin/tee -a" /usr/sbin/visudo;
+/bin/echo -e "/dev/sdb1 /home/admin/sdb1 auto noauto,nosuid,nodev,noexec,user 0 0\n/dev/sda1 /home/admin/sda1 auto noauto,nosuid,nodev,noexec,user 0 0" >> /etc/fstab;
+/bin/echo -e "admin ALL=(ALL) NOPASSWD: /bin/umount /home/admin/sdb1, /bin/umount /home/admin/sda1, /etc/init.d/networking restart, /sbin/setup-interfaces" >> /etc/sudoers;
+/bin/sed -i "1s/:::::/::::1:/g" /etc/shadow; 
+/bin/sed -i "s/^/#/" /etc/securetty; 
+/usr/bin/passwd -l root;
+/bin/echo "Edit "/etc/profile" and change the line "umask 022" to "umask 077"";
+/bin/echo "Run "exit", then login with admin and run "/usr/bin/sudo /bin/sh server2.sh""

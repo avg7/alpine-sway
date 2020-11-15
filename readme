@@ -1,0 +1,103 @@
+1. Folgen Sie den Schritten auf folgender Website: https://wiki.alpinelinux.org/wiki/Create_UEFI_boot_USB
+Die Terminal-Befehle für die Einrichtung von Speichermedien auf der vorherig genannten Internetseite werden nun verkürzt aufgelistet (ersetzen Sie "usb" mit der Bezeichung des Speichermediums:
+apk add parted
+parted --script /dev/usb mklabel gpt
+parted --script --align=optimal /dev/usb mkpart ESP fat32 1MiB 100%
+parted --script /dev/usb set 1 boot on
+mkfs.vfat -n ALPINE /dev/usb1
+
+2. Laden Sie Alpine-Linux herunter unter https://alpinelinux.org/downloads 
+
+Kopieren Sie die heruntergeladenen Dateien auf das Speichermedium aus Schritt 1. 
+
+3. Plazieren Sie das Script server-apk.sh auf dem Speichermedium aus Schritt 1. Verbinden Sie das Speichermedium mit einem PC und starten Sie Alpine Linux. Verbinden Sie den PC mit dem Internet und geben Sie folgenden Befehl ein und folgen Sie den Anweisungen:
+setup-alpine
+
+Bearbeiten Sie nun die Datei "/etc/apk/repositories" und entfernen Sie das # Zeichen vor der Zeile die das Wort "community" enthält (siehe auch: https://wiki.alpinelinux.org/wiki/Enable_Community_Repository):
+vi /etc/apk/repositories
+
+Nun folgende Befehle eingeben:
+apk update
+sh server-apk.sh
+
+Nun PC ausschalten.
+
+Anderes Linux-Betriebssystem einschalten und Speichermedium worauf sich Alpine Linux befindet mit dem PC verbinden und einhängen mit folgendem Befehl (usb mit der Speichermediumbezeichnung ersetzen und user mit Ihrem Benutzername ersetzen): sudo mount /dev/usb1 /home/user/usb.  
+
+4. Ändern Sie den Namen vom Ordner "cache" zu "serverapk" und erstellen Sie einen Ordner mit dem Namen "sudo" auf dem Speichermedium, und kopieren Sie in den ordner "sudo" die Datei "sudo.apk" aus dem Ordner "serverapk".
+
+Nun Schritt 3 wiederholen, jedoch mit "sway-apk.sh" statt "server-apk.sh" und danach Schritt 4 überspringen.
+
+5. Ändern Sie den Namen vom Ordner "cache" zu "swayapk" auf dem Speichermedium. Kopieren Sie die Ordner "files", "historyserver", "historysway" und "admin" und die Dateien "server.sh", "server2.sh" und "sway.sh" auf das Speichermedium. Ersetzen Sie die Prüfsummen in der Datei "512checksums.sha". Kopieren Sie dann die Datei "512checksums.sha" auf das Speichermedium.
+
+6. Verbinden Sie das Speichermedium mit einem PC und starten Sie Alpine Linux. Nun folgende Befehle eingeben und den Anweisungen folgen:
+sh /media/usb/server.sh
+sh /media/usb/server2.sh
+sh /media/usb/sway-apk.sh
+
+Fertig
+
+Always after you start Alpine Linux:
+To make sure that all programs have been installed run the following command (for ROCK64 replace "mmcblk1p1 with "mmcblk0p1"):
+sudo apk add /media/usb/cache/*.apk
+
+The script "/etc/files/startscript.sh" runs automatically at boot (see "/etc/local.d/boot.start").
+After you login control the checksums from this file (displayed after you login with the user "admin"):
+localhost.apkovl.tar.gz
+
+Control also the number of files which are on your microSD card (displayed after you login with the user "admin").
+
+Now you can remove the microSD card with Alpine Linux (Important: Then you can not run "lbu commit")
+
+Before you start Sway with the command "sway" read "/etc/sway/config".
+
+Set time and date with the commands:
+sudo date --set YYYY-MM-DD
+sudo date --set HH:MM:SS 
+
+After you start sway you should open a terminal and run: sudo chmod -s /usr/bin/sway
+You should also find out if sway is running as root: For example run the command "top" and search a process with the name "sway", which is running as "root" (the process is running as root if in the field "user" you can see "root"). Then run the following command (replace pid with the process ID): kill pid   
+
+If you want monitoring the logfiles "/var/log/messages" (with logwatch) and "/var/log/audit/audit.log" (with aureport) and processes (with ps) and see the audit system and service status, open terminal and run:
+sudo sh /etc/files/log.sh
+
+You can run "sudo rm -rf /etc/apk/cache" and you can remove the user "admin" from "/etc/sudoers" with the command "sudo sed -i '/admin/d' /etc/sudoers" (or run: sudo sh /etc/files/noroot.sh) (Important: Then nobody can use sudo and there are no programs that you can save with "lbu commit", you should not use "lbu commit" in this session)
+
+If you want to disable xwayland for all programs, insert the line "xwayland disable" into "/etc/sway/config" 
+
+If you want to save all files in the user folders (microSD card with Alpine Linux must be in your board), run:
+sudo cp -rp /home/* /etc/home/
+sudo lbu commit
+
+If you want to mount usb storage devices you can install udisks2 or you edit the file "/etc/fstab" (Important: You must run always after you start Alpine Linux at first "/usr/bin/sudo /bin/chmod +s /bin/su"):
+ 
+For udisks2 you must enable dbus, run: sudo rc-update add dbus
+Then restart the pc.
+
+How to edit "/etc/fstab" to mount usb storage devices without sudo:
+Find the name of the usb storage device:
+sudo fdisk -l
+Run (replace "account" with your username and "usb" with the name of the usb storage device):
+mkdir /home/account/usb
+
+Insert in "/etc/fstab" this line (replace "account" with the name of your userfolder and "usb" with the name of the usb storage device):
+/dev/usb /home/account/usb auto noauto,nosuid,nodev,noexec,user 0 0
+
+Run:
+sudo visudo
+Then insert this line (replace "account" with your username and "usb" with the name of the usb storage device):
+account ALL=(ALL) NOPASSWD: /bin/umount /home/account/usb
+Now you can mount the usb storage device with:
+mount usb
+To unmount:
+sudo umount /home/account/usb
+
+To allow users to run the command "poweroff" insert the following line after you run the command "sudo visudo" (all users must be in the group input):
+%input ALL=(ALL) /sbin/poweroff
+
+Recommendations for Firefox etc.: 
+www.kuketz-blog.de/firefox-ein-browser-fuer-datenschutzbewusste-firefox-kompendium-teil1
+www.wiki.kairaven.de
+www.privacy-handbuch.de
+
+You can contact us (Website: avg7.de) if you need a Chaoskey, Nitrokey or other Open-Source-Hardware:
