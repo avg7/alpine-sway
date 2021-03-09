@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # iptables Firewall Skript
 
 # Iptables einrichten
@@ -52,31 +51,13 @@ $IPTABLES -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 $IPTABLES -A INPUT -p tcp -j REJECT --reject-with tcp-reset 
 $IPTABLES -A INPUT -j REJECT --reject-with icmp-port-unreachable
 
-# DNS erlauben
-#$IPTABLES -A OUTPUT -o eth0 -p tcp -m tcp  --dport 53  -m state --state NEW  -j ACCEPT
-#$IPTABLES -A OUTPUT -o wlan0 -p tcp -m tcp  --dport 53  -m state --state NEW  -j ACCEPT
-#$IPTABLES -A OUTPUT -o eth0 -p udp -m udp  --dport 53  -m state --state NEW  -j ACCEPT
-#$IPTABLES -A OUTPUT -o wlan0 -p udp -m udp  --dport 53  -m state --state NEW  -j ACCEPT
+# VPN
+$IPTABLES -A OUTPUT -o tun+ -j ACCEPT
+$IPTABLES -A OUTPUT -d 255.255.255.255 -j ACCEPT
+$IPTABLES -A INPUT -s 255.255.255.255 -j ACCEPT
 
-# HTTP erlauben
-#$IPTABLES -A OUTPUT -o eth0 -p tcp -m tcp  --dport 80  -m state --state NEW  -j ACCEPT
-#$IPTABLES -A OUTPUT -o wlan0 -p tcp -m tcp  --dport 80  -m state --state NEW  -j ACCEPT
-
-# HTTPS erlauben
-#$IPTABLES -A OUTPUT -o eth0 -p tcp -m tcp  --dport 443  -m state --state NEW  -j ACCEPT
-#$IPTABLES -A OUTPUT -o wlan0 -p tcp -m tcp  --dport 443  -m state --state NEW  -j ACCEPT
-
-# POP3s erlauben
-# $IPTABLES -A OUTPUT -o eth0 -p tcp -m tcp  --dport 995  -m state --state NEW  -j ACCEPT
-# $IPTABLES -A OUTPUT -o wlan0 -p tcp -m tcp  --dport 995  -m state --state NEW  -j ACCEPT
-
-# SSH erlauben
-$IPTABLES -A OUTPUT -o wlan0 -p tcp -m tcp --dport 22  -m state --state NEW  -j ACCEPT
-$IPTABLES -A INPUT -i wlan0 -p tcp -m tcp -s IP-Adresse --dport 22  -m state --state NEW  -j ACCEPT
-
-# SSH erlauben
-$IPTABLES -A OUTPUT -o eth0 -p tcp -m tcp --dport 22  -m state --state NEW  -j ACCEPT
-$IPTABLES -A INPUT -i eth0 -p tcp -m tcp -s IP-Adresse --dport 22  -m state --state NEW  -j ACCEPT
+$IPTABLES -A OUTPUT -o eth+ -p udp --match multiport --dports 1194:1197,1300:1303 -d IP-Adressen der VPN-Server -j ACCEPT
+$IPTABLES -A OUTPUT -o eth+ -p tcp --match multiport --dports 80,443 -d IP-Adressen der VPN-Server -j ACCEPT
 
 # Logging aktivieren
 $IPTABLES -N LOGGING
@@ -88,4 +69,5 @@ $IPTABLES -A LOGGING -j DROP
 # Regeln speichern und iptables einrichten
 /sbin/iptables-save > /etc/iptables/rules-save
 
+modprobe tun
 /etc/init.d/klogd start
