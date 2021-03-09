@@ -1,6 +1,8 @@
 #!/bin/sh
 /sbin/apk verify /media/usb/serverapk/*.apk;
-/sbin/apk add /media/usb/serverapk/*.apk;
+/sbin/apk add --force-non-repository /media/usb/serverapk/*.apk;
+/sbin/apk verify /media/usb/apks/x86_64/*.apk;
+/sbin/apk add --force-non-repository openvpn openresolv logcheck grep bash logtail perl run-parts macchanger iptables audit;
 /bin/sh /etc/files/firewall.sh;
 /bin/touch /tmp/difflog;
 /usr/bin/diff /media/usb/files/logcheck.logfiles /etc/logcheck/logcheck.logfiles >> /tmp/difflog;

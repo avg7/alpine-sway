@@ -1,6 +1,8 @@
 #!/bin/sh
 /sbin/apk verify /media/usb/swayapk/*.apk;
-/sbin/apk add /media/usb/swayapk/*.apk;
+/sbin/apk add --force-non-repository /media/usb/swayapk/*.apk;
+/sbin/apk verify /media/usb/apks/x86_64/*.apk;
+/sbin/apk add --force-non-repository audit eudev libinput bemenu sway sway-doc xorg-server-xwayland swaylock swayidle ttf-freefont mesa mesa-dri-gallium mesa-egl mesa-gbm mesa-gl mesa-glapi mesa-gles mc sudo macchanger firefox-esr libc6-compat gnupg iptables alacritty logcheck grep bash logtail perl run-parts;
 /sbin/setup-udev;
 /usr/sbin/addgroup admin input;
 /usr/sbin/addgroup admin video;

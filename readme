@@ -24,7 +24,7 @@ Nun PC ausschalten.
 
 Anderes Linux-Betriebssystem einschalten und Speichermedium worauf sich Alpine Linux befindet mit dem PC verbinden und einhängen mit folgendem Befehl (usb mit der Speichermediumbezeichnung ersetzen und user mit Ihrem Benutzername ersetzen): sudo mount /dev/usb1 /home/user/usb.  
 
-4. Ändern Sie den Namen vom Ordner "cache" zu "serverapk" und erstellen Sie einen Ordner mit dem Namen "sudo" auf dem Speichermedium, und kopieren Sie in den ordner "sudo" die Datei "sudo.apk" aus dem Ordner "serverapk".
+4. Ändern Sie den Namen vom Ordner "cache" zu "serverapk".
 
 Nun Schritt 3 wiederholen, jedoch mit "sway-apk.sh" statt "server-apk.sh" und danach Schritt 4 überspringen.
 
@@ -33,12 +33,14 @@ Nun Schritt 3 wiederholen, jedoch mit "sway-apk.sh" statt "server-apk.sh" und da
 6. Verbinden Sie das Speichermedium mit einem PC und starten Sie Alpine Linux. Nun folgende Befehle eingeben und den Anweisungen folgen:
 sh /media/usb/server.sh
 sh /media/usb/server2.sh
+
+Wenn Sie Sway benötigen:
 sh /media/usb/sway-apk.sh
 
 Fertig
 
 Always after you start Alpine Linux:
-To make sure that all programs have been installed run the following command (for ROCK64 replace "mmcblk1p1 with "mmcblk0p1"):
+To make sure that all programs have been installed run the following command:
 sudo apk add /media/usb/cache/*.apk
 
 The script "/etc/files/startscript.sh" runs automatically at boot (see "/etc/local.d/boot.start").
@@ -100,4 +102,4 @@ www.kuketz-blog.de/firefox-ein-browser-fuer-datenschutzbewusste-firefox-kompendi
 www.wiki.kairaven.de
 www.privacy-handbuch.de
 
-You can contact us (Website: avg7.de) if you need a Chaoskey, Nitrokey or other Open-Source-Hardware:
+You can contact us (Website: avg7.de) if you need a Chaoskey, Nitrokey or other Open-Source-Hardware.
