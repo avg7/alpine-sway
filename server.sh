@@ -22,11 +22,11 @@
 /bin/cp /media/usb/files/boot.start /etc/local.d;
 /bin/chmod 0500 /etc/local.d/boot.start;
 /sbin/rc-update add local default;
-/sbin/apk verify /media/usb/sudo/*.apk;
-/sbin/apk add /media/usb/sudo/*.apk;
+/sbin/apk verify /media/usb/apks/x86_64/*sudo*;
+/sbin/apk add --force-non-repository /media/usb/apks/x86_64/*sudo*;
 /bin/echo -e "Defaults secure_path=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"\nDefaults passwd_tries=1\nDefaults use_pty\nDefaults requiretty\nDefaults env_reset, timestamp_timeout=0\nadmin ALL=(ALL) ALL" | EDITOR="/usr/bin/tee -a" /usr/sbin/visudo;
 /bin/echo -e "/dev/sdb1 /home/admin/sdb1 auto noauto,nosuid,nodev,noexec,user 0 0\n/dev/sda1 /home/admin/sda1 auto noauto,nosuid,nodev,noexec,user 0 0" >> /etc/fstab;
-/bin/echo -e "admin ALL=(ALL) NOPASSWD: /bin/umount /home/admin/sdb1, /bin/umount /home/admin/sda1, /etc/init.d/networking restart, /sbin/setup-interfaces" >> /etc/sudoers;
+/bin/echo -e "admin ALL=(ALL) NOPASSWD: /usr/sbin/openvpn, /bin/umount /home/admin/sdb1, /bin/umount /home/admin/sda1, /etc/init.d/networking restart, /sbin/setup-interfaces" >> /etc/sudoers;
 /bin/sed -i "1s/:::::/::::1:/g" /etc/shadow; 
 /bin/sed -i "s/^/#/" /etc/securetty; 
 /usr/bin/passwd -l root;
