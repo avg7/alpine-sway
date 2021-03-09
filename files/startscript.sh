@@ -28,14 +28,15 @@
 /usr/bin/find /media/usb/boot | /usr/bin/wc -l; 
 /bin/echo "/media/usb/cache:"; 
 /usr/bin/find /media/usb/cache | /usr/bin/wc -l; 
-/bin/echo "/media/usb/SHARE:"; 
-/usr/bin/find /media/usb/SHARE | /usr/bin/wc -l; 
+/bin/echo "/media/usb/files:"; 
+/usr/bin/find /media/usb/files | /usr/bin/wc -l; 
 /bin/cp -rp /etc/home/* /home/; 
 /bin/rm -r /etc/home; 
 /bin/mkdir /etc/home; 
 /bin/chmod 600 /etc/home; 
 /bin/chmod 400 /etc/motd; 
-/bin/chown admin:admin /etc/motd; 
+/bin/chown admin:admin /etc/motd;
+/bin/mv /usr/sbin/resolvconf /sbin/resolvconf 
 /bin/chown root:logcheck /var/log/messages; 
 /bin/chmod 0700 /var/log/wtmp; 
 /bin/chmod -s /bin/su; 
@@ -53,6 +54,9 @@
 /bin/chown root:root /var/log/audit/audit.log; 
 /bin/chown root:root /var/log/audit; 
 /bin/mv /usr/bin/auvirt /usr/bin/ausyscall /usr/bin/aulastlog /usr/bin/aulast /sbin; 
-/bin/mv /usr/sbin/autrace /usr/sbin/ausearch /usr/sbin/aureport /usr/sbin/augenrules /usr/sbin/auditd /usr/sbin/auditctl /usr/sbin/audisp-remote /usr/sbin/audispd /sbin;
+/bin/mv /usr/sbin/autrace /usr/sbin/ausearch /usr/sbin/aureport /usr/sbin/augenrules /usr/sbin/auditctl /usr/sbin/audisp-remote /usr/sbin/audispd /sbin;
+/sbin/modprobe fat
+/sbin/modprobe ext4
+/sbin/modprobe vfat
 /bin/echo ""; 
 /sbin/rc-service auditd start;
