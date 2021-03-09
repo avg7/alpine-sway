@@ -11,3 +11,14 @@
 /usr/bin/sudo /etc/init.d/networking restart
 /usr/bin/sudo /sbin/setup-interfaces
 /usr/bin/sudo /sbin/apk add /media/usb/cache/*.apk
+/usr/bin/sudo /usr/sbin/openvpn --config /etc/openvpn/mullvad_XX_XXX.conf
+cd /etc/openvpn
+/usr/bin/sudo /bin/sh vpn_firewall.sh
+/usr/bin/sudo /bin/sh ssh_firewall.sh
+/usr/bin/sudo /bin/sh vor_sway.sh
+/usr/bin/sudo /bin/sh end.sh
+/bin/sh inet.sh
+/bin/mount sdb1
+/usr/bin/sudo /bin/umount /home/admin/sdb1
+/usr/bin/sudo /usr/bin/eject /dev/sdb
+/usr/bin/sudo /sbin/fdisk -l
